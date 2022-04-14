@@ -9,8 +9,6 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
     CallbackQuery
 
-from utilities import Experience
-
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 SUPERJOB_TOKEN = os.environ.get("SUPERJOB_TOKEN")
 
