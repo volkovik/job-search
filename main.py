@@ -6,12 +6,12 @@ from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, \
-    InlineKeyboardButton, \
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
     CallbackQuery
 
 from data import db_session
 from data.users import User
+from hhru import HHRU
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 SUPERJOB_TOKEN = os.environ.get("SUPERJOB_TOKEN")
@@ -22,6 +22,8 @@ dp = Dispatcher(bot, storage=storage)
 db_session.global_init("db/database.db")  # запускаем database
 
 logging.basicConfig(level=logging.INFO)
+
+hh = HHRU()
 
 
 class WorkForm(StatesGroup):
@@ -63,6 +65,24 @@ async def process_profession(message: Message, state: FSMContext):
 
     await state.finish()
     await message.reply("Настройка закончена. Давайте начнём поиск работы.", reply_markup=keyboard)
+
+
+@dp.message_handler(commands=["search"])
+async def search_vacancy(message: Message):
+    session = db_session.create_session()
+
+    user = session.query(User).filter(User.telegram_id == message.chat.id).first()
+
+    job = await hh.getPage(user.specialization, user.count)
+    user.count += 1
+    session.commit()
+
+    await message.reply(
+        f"- {hh.parse_name(job)}\n"
+        f"- {hh.parse_salary(job)}\n"
+        f"Трудовые обязательства: {hh.parse_responsibilities(job)}\n"
+        f"Требования: {hh.parse_requirements(job)}"
+    )
 
 
 if __name__ == '__main__':
