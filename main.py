@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, types, executor
 
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+SUPERJOB_TOKEN = os.environ.get("SUPERJOB_TOKEN")
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher(bot)
