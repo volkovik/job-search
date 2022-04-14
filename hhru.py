@@ -11,6 +11,19 @@ class HHRU:
         self.name = name
         self.count = 0
 
+    def getById(self, id):
+        """
+                Создаем метод для получения страницы со списком вакансий.
+                Аргументы:
+                    page - Индекс страницы, начинается с 0. Значение по умолчанию 0, т.е. первая страница
+                """
+        # Справочник для параметров GET-запроса
+
+        req = requests.get('https://api.hh.ru/vacancies/' + str(id))  # Посылаем запрос к API
+        data = req.content.decode()  # Декодируем его ответ, чтобы Кириллица отображалась корректно
+        req.close()
+        return json.loads(data)
+
     def getPage(self, page=None):
         """
         Создаем метод для получения страницы со списком вакансий.
@@ -67,16 +80,19 @@ class HHRU:
         return url
 
 
+# hhru = HHRU("Программист")
+# for i in range(2):
+#     response = hhru.getPage()
+#     print(response)
+#     # print(json.dump(response, open("name.json", mode="w"), ensure_ascii=False))
+#     print("Название:", hhru.parse_name(response))
+#     print("Зарплата:", hhru.parse_salary(response))
+#     print("требования:", hhru.parse_requirements(response))
+#     print("Обязанности:", hhru.parse_responsibilities(response))
+#     print("URL: ", hhru.parse_url(response))
+
 hhru = HHRU("Программист")
-for i in range(2):
-    response = hhru.getPage()
-    print(response)
-    # print(json.dump(response, open("name.json", mode="w"), ensure_ascii=False))
-    print("Название:", hhru.parse_name(response))
-    print("Зарплата:", hhru.parse_salary(response))
-    print("требования:", hhru.parse_requirements(response))
-    print("Обязанности:", hhru.parse_responsibilities(response))
-    print("URL: ", hhru.parse_url(response))
+print(hhru.getById(7760476))
 
 # for page in range(0, 1):
 #

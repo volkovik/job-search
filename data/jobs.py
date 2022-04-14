@@ -15,25 +15,6 @@ class FavouriteTable(SqlAlchemyBase):
     job_id = sqlalchemy.Column(sqlalchemy.Integer)
 
 
-# favourite_table = sqlalchemy.Table('favourite', SqlAlchemyBase.metadata,
-#                                    sqlalchemy.Column('user',sqlalchemy.Integer,
-#                                                      sqlalchemy.ForeignKey('users.id'),
-#                                                      primary_key=True),
-#                                    sqlalchemy.Column('job', sqlalchemy.Integer,
-#                                                      sqlalchemy.ForeignKey('jobs.id')))
-
-
-#
-# blacklist_table = sqlalchemy.Table(
-#     'blacklist',
-#     SqlAlchemyBase.metadata,
-#     sqlalchemy.Column('user', sqlalchemy.Integer,
-#                       sqlalchemy.ForeignKey('user.id')),
-#     sqlalchemy.Column('job', sqlalchemy.Integer,
-#                       sqlalchemy.ForeignKey('jobs.id'))
-# )
-
-
 class Job(SqlAlchemyBase):
     __tablename__ = 'jobs'
 
@@ -41,4 +22,3 @@ class Job(SqlAlchemyBase):
                            primary_key=True, autoincrement=True)
     job_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
     source = sqlalchemy.Column(sqlalchemy.Integer, nullable=False)
-    # users = orm.relationship(FavouriteTable, backref="users")

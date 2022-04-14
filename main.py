@@ -6,8 +6,12 @@ from aiogram import Bot, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, \
+    InlineKeyboardButton, \
     CallbackQuery
+
+from data import db_session
+from data.users import User
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 SUPERJOB_TOKEN = os.environ.get("SUPERJOB_TOKEN")
@@ -15,6 +19,7 @@ SUPERJOB_TOKEN = os.environ.get("SUPERJOB_TOKEN")
 bot = Bot(token=TELEGRAM_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
+db_session.global_init("db/database.db")  # запускаем database
 
 logging.basicConfig(level=logging.INFO)
 
@@ -29,6 +34,14 @@ async def send_welcome(message: Message):
         "Тебя приветсвует бот для поиска работы молодым профессионалам.\n"
         "Давай настроем поиск вакансий под тебя."
     )
+    # создаем нового пользователя
+    db_sess = db_session.create_session()
+
+    user = User()
+    user.telegram_id = message.chat.id
+
+    db_sess.add(user)
+    db_sess.commit()
 
     await WorkForm.profession.set()
     await bot.send_message(message.chat.id, "Какая у тебя профориентация?")
@@ -38,6 +51,12 @@ async def send_welcome(message: Message):
 async def process_profession(message: Message, state: FSMContext):
     async with state.proxy() as data:
         data["profession"] = message.text
+
+    # добавляем специализацию пользователю
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.telegram_id == message.chat.id).first()
+    user.specialization = message.text
+    db_sess.commit()
 
     keyboard = ReplyKeyboardMarkup()
     keyboard.add(KeyboardButton("/search"))
