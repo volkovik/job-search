@@ -89,6 +89,17 @@ async def search_vacancy(message: Message):
     except IndexError:
         await message.reply("По вашей профориентации не было найдено ваканский. Поменяйте профориентацию"
                             "с помощью команды /start")
+    except TypeError:
+        job = await hh.getPage(user.specialization, user.count + 1)
+        user.count += 1
+        session.commit()
+        await message.reply(
+            f"- {hh.parse_name(job)}\n"
+            f"- {hh.parse_salary(job)}\n"
+            f"Трудовые обязательства: {hh.parse_responsibilities(job)}\n"
+            f"Требования: {hh.parse_requirements(job)}\n"
+            f"Ссылка: {hh.parse_url(job)}"
+        )
 
 
 if __name__ == '__main__':
