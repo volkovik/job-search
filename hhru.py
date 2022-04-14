@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import time
+from utilities import Job
 
 import requests
 
@@ -32,6 +33,14 @@ class HHRU:
         req.close()
         return json.loads(data)
 
+    # def parse_job(self, response): todo
+    #     return Job(url: str
+    # title: str
+    # salary_from: int
+    # salary_to: int
+    # currency: str
+    # description: str)
+
     def parse_name(self, response):
         return response["items"][0]["name"]
 
@@ -61,6 +70,7 @@ class HHRU:
 hhru = HHRU("Программист")
 for i in range(2):
     response = hhru.getPage()
+    print(response)
     # print(json.dump(response, open("name.json", mode="w"), ensure_ascii=False))
     print("Название:", hhru.parse_name(response))
     print("Зарплата:", hhru.parse_salary(response))

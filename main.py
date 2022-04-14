@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 @dp.message_handler(commands=["start"])
 async def send_welcome(message: types.Message):
-    await message.reply("Hello!")
+    await message.reply(str(message.from_user.id))
 
 
 @dp.message_handler(commands=["info"])
