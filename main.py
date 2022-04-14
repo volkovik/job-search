@@ -39,11 +39,12 @@ async def send_welcome(message: Message):
     # создаем нового пользователя
     db_sess = db_session.create_session()
 
-    user = User()
-    user.telegram_id = message.chat.id
+    if not db_sess.query(User).filter(User.telegram_id == message.chat.id).first():
+        user = User()
+        user.telegram_id = message.chat.id
 
-    db_sess.add(user)
-    db_sess.commit()
+        db_sess.add(user)
+        db_sess.commit()
 
     await WorkForm.profession.set()
     await bot.send_message(message.chat.id, "Какая у тебя профориентация?")
