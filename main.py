@@ -47,7 +47,7 @@ async def send_welcome(message: Message):
         db_sess.commit()
 
     await WorkForm.profession.set()
-    await bot.send_message(message.chat.id, "Какая у тебя профориентация?")
+    await bot.send_message(message.chat.id, "Напишите какую работы вы хотите:")
 
 
 @dp.message_handler(state=WorkForm.profession)
