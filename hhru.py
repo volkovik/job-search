@@ -42,7 +42,7 @@ class HHRU:
         return snippet["responsibility"]
 
     def parse_url(self, response):
-        url = response["items"][0]["url"]
+        url = response["items"][0]["alternate_url"]
         return url
 
 

@@ -83,7 +83,8 @@ async def search_vacancy(message: Message):
             f"- {hh.parse_name(job)}\n"
             f"- {hh.parse_salary(job)}\n"
             f"Трудовые обязательства: {hh.parse_responsibilities(job)}\n"
-            f"Требования: {hh.parse_requirements(job)}"
+            f"Требования: {hh.parse_requirements(job)}\n"
+            f"Ссылка: {hh.parse_url(job)}"
         )
     except IndexError:
         await message.reply("По вашей профориентации не было найдено ваканский. Поменяйте профориентацию"
